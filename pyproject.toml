@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mlipTools"
+version = "0.1.0"
+description = "Tools for analyzing machine-learning interatomic potential datasets"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "ase>=3.22",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
