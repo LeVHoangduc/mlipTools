@@ -1,4 +1,6 @@
-def get_E0(db, key, config_type="IsolatedAtom"):
+import numpy as np
+
+def get_E0s(db, key, config_type="IsolatedAtom"):
     """Extract isolated-atom reference energies."""
 
     E0 = {}
@@ -14,13 +16,13 @@ def get_E0(db, key, config_type="IsolatedAtom"):
     return E0
 
 
-def get_atomization_energies(
+def get_atomization_energy(
     atoms,
     E0,
     energy_key,
     peratom=False,
 ):
-    """Calculate atomization energy."""
+    """Get atomization energy for each configuration"""
 
     E_total = float(atoms.info[energy_key])
     symbols = atoms.get_chemical_symbols()
@@ -40,3 +42,24 @@ def get_atomization_energies(
         E_atomization /= len(atoms)
 
     return E_atomization
+
+
+def get_total_energy(db, energy_key, peratom=False):
+    """Get total energy or total enery per atom for a database, shape (nconfig,)"""
+
+    energies = []
+    for atoms in db:
+        E = float(atoms.info[energy_key])
+        if peratom:
+            E /= len(atoms)
+        energies.append(E)
+
+    return np.array(energies)
+
+def get_forces(
+        db,
+        forces_key,
+):
+    """Get forces for a database: list of nconfig arrays, each of shape (natoms_i, 3)"""
+
+    return [atoms.arrays[forces_key] for atoms in db]
